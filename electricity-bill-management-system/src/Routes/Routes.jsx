@@ -2,10 +2,11 @@ import {
     createBrowserRouter,
     RouterProvider,
   } from "react-router-dom";
+import Main from "../components/Main";
   export const router = createBrowserRouter([
     {
       path: "/",
-      element: <h1>ADBMS Lab Project IIT Dhanbad</h1>,
+      element: <Main></Main>
     },
   ]);
   
