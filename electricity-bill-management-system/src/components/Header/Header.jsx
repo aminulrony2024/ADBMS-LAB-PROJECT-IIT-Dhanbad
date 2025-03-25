@@ -1,42 +1,93 @@
-import iitismlogo from "../../assets/images/iitismlogo.png";
-import { FaSquarePhone } from "react-icons/fa6";
-import { MdEmail } from "react-icons/md";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="bg-gradient-to-r from-white to-[#f6b7a1] drop-shadow-lg">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 justify-between p-7">
-        <div className="mx-auto md:mx-6">
-          <img
-            className="max-w-28"
-            src={iitismlogo}
-            alt="IIT ISM Logo"
-          />
-        </div>
-        <div className="font-medium flex flex-col gap-2 text-center">
-          <h1 className="text-4xl">IIT ISM EBMS</h1>
-          <h2 className="text-lg">(For IIT ISM Area Only)</h2>
-        </div>
-        <div className="mx-auto space-y-3">
-          <p className="flex flex-row text-xl">
-            <FaSquarePhone className="mt-1" />{" "}
-            <span className="font-medium ml-2">Call Us :</span>
-            <a className="text-black hover:text-blue-700" href="tel:+91 62 9021 9676">
-               +91-6290219676
-            </a>
-          </p>
-          <p className="flex flex-row text-xl">
-            <MdEmail className="mt-1" />{" "}
-            <span className="font-medium ml-2">Contact Us :</span>
-            <a
-              className="text-black hover:text-blue-700"
-              href="mailto:24im0022@iitism.ac.in"
+    <nav className="bg-black text-white shadow-lg">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <div className="flex-shrink-0 flex items-center">
+              <Link to="/" className="text-2xl font-bold text-white">
+                PowerBill
+              </Link>
+            </div>
+          </div>
+          
+          <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-8">
+            <Link to="/" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              Home
+            </Link>
+            <Link to="/about" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              About
+            </Link>
+            <Link to="/contact" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+              Contact
+            </Link>
+            <Link to="/login" className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary">
+              Login
+            </Link>
+            <Link to="/signup" className="bg-transparent text-white border border-white px-4 py-2 rounded-md text-sm font-medium hover:bg-white hover:text-black">
+              Sign Up
+            </Link>
+          </div>
+
+          <div className="flex items-center sm:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
-               24im0022@iitism.ac.in
-            </a>
-          </p>
+              {isOpen ? (
+                <XMarkIcon className="block h-6 w-6" />
+              ) : (
+                <Bars3Icon className="block h-6 w-6" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile menu */}
+      {isOpen && (
+        <div className="sm:hidden bg-black">
+          <div className="pt-2 pb-3 space-y-1">
+            <Link
+              to="/"
+              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              Home
+            </Link>
+            <Link
+              to="/about"
+              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              About
+            </Link>
+            <Link
+              to="/contact"
+              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              Contact
+            </Link>
+            <Link
+              to="/login"
+              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              Sign Up
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 };
 
