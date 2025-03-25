@@ -2,40 +2,85 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, Github } from 'lucide-react';
 import Header from '../Header/Header';
-
+import Swal from "sweetalert2";
+import { getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
+import { app } from "../../firebase/firebase.config";
+import useAuth from "../../Hooks/useAuth";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+const auth = getAuth(app);
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError(null);
-  };
-
-  const handleEmailSignup = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Mock signup
-      localStorage.setItem('user', JSON.stringify({ email: form.email, name: form.name }));
-      navigate('/');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGithubSignup = () => {
-    setError('GitHub authentication is not available in demo mode');
+  const { newUser, setLoading, loading } = useAuth();
+  // const [loading, setLoading] = useState(false);
+  const handleSignUp = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const Name = form.name.value;
+    const Email = form.email.value;
+    const Password = form.password.value;
+    newUser(Email, Password)
+      .then(() => {
+        // auth.currentUser.displayName =  name;
+        updateProfile(auth.currentUser, {
+          displayName: Name,
+        })
+          .then()
+          .catch();
+        sendEmailVerification(auth.currentUser)
+          .then(() => {
+            Swal.fire({
+              position: "center",
+              icon: "info",
+              title: "Kindly check your mail id and confirm your identity",
+              showConfirmButton: false,
+              timer: 4500,
+            });
+          })
+          .catch((error) => console.log(error));
+        const userInfo = {
+          name: Name,
+          email: Email,
+          role: "user"
+        };
+        //using axiospublic to call create user api in mongoDB
+        axiosPublic.post("/users", userInfo).then((res) => {
+          if (res.data.insertedId) {
+            setLoading(false);
+            navigate(location?.state ? location.state : "/login", {
+              replace: true,
+            });
+          }
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          title: "User already exist! Send verification email?",
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: "Send",
+          denyButtonText: `Don't send`,
+        }).then((result) => {
+          /* Read more about isConfirmed, isDenied below */
+          if (result.isConfirmed) {
+            sendEmailVerification(auth.currentUser)
+              .then(() => {
+                navigate(location?.state ? location.state : "/login", {
+                  replace: true,
+                });
+              })
+              .catch();
+            Swal.fire(
+              "Verification email sent! Kindly check your email",
+              "",
+              "success"
+            );
+          } else if (result.isDenied) {
+            Swal.fire("Verification email not send", "", "info");
+          }
+        });
+      });
   };
 
   return (
@@ -61,7 +106,7 @@ const SignUp = () => {
           </div>
         )}
 
-        <form className="mt-8 space-y-6" onSubmit={handleEmailSignup}>
+        <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="name" className="sr-only">
@@ -76,8 +121,6 @@ const SignUp = () => {
                   name="name"
                   type="text"
                   required
-                  value={form.name}
-                  onChange={handleChange}
                   className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                   placeholder="Full Name"
                 />
@@ -96,8 +139,6 @@ const SignUp = () => {
                   name="email"
                   type="email"
                   required
-                  value={form.email}
-                  onChange={handleChange}
                   className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                   placeholder="Email address"
                 />
@@ -116,8 +157,6 @@ const SignUp = () => {
                   name="password"
                   type="password"
                   required
-                  value={form.password}
-                  onChange={handleChange}
                   className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                   placeholder="Password"
                 />
@@ -141,21 +180,6 @@ const SignUp = () => {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-                Or continue with
-              </span>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <button
-              onClick={handleGithubSignup}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              <Github className="h-5 w-5" />
-              GitHub
-            </button>
           </div>
         </div>
       </div>
