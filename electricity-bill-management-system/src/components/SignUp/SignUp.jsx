@@ -66,6 +66,7 @@ const SignUp = () => {
         const userInfo = {
           name: Name,
           email: Email,
+          consumedUnit : 0,
           role: "user",
         };
         //using axiospublic to call create user api in mongoDB

@@ -98,6 +98,13 @@ async function run() {
       res.send({ admin });
     });
 
+    //api to store data in database after new user sign up
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userData.insertOne(user);
+      res.send(result);
+    });
+
     //api to get a single user data
     app.get("/user/:email", verifyToken, async (req, res) => {
       const email = req.params.email;
