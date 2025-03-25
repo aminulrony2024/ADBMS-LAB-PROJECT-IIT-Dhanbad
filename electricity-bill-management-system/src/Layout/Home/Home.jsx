@@ -1,9 +1,10 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const Home = () => {
     return (
         <div>
-            <h1 className='text-3xl text-green-500 font-bold underline'>ADBMS Lab Project IIT ISM Dhanbad</h1>
+            <Outlet></Outlet>
         </div>
     );
 };
