@@ -10,6 +10,9 @@ import Home from "../Layout/Home/Home";
 import { H1Icon } from "@heroicons/react/24/outline";
 import SignUp from "../components/SignUp/SignUp";
 import { LogIn } from "lucide-react";
+import Analytics from "../components/Analytics";
+import Feedback from "../components/Feedback";
+import Notification from "../components/Notification";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -44,6 +47,18 @@ export const router = createBrowserRouter([
   {
     path:"dashboard",
     element:<Dashboard></Dashboard>
+  },
+  {
+    path:"notification",
+    element:<Notification></Notification>
+  },
+  {
+    path:"analytics",
+    element:<Analytics></Analytics>
+  },
+  {
+    path:"feedback",
+    element:<Feedback></Feedback>
   }
   // {
   //   path: "home",

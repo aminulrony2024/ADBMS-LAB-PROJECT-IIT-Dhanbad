@@ -22,7 +22,7 @@ const Navbar = () => {
           
           <div className="hidden md:flex items-center space-x-8">
             <NavLink 
-              to="/" 
+              to="/dashboard" 
               className={({ isActive }) => 
                 `flex items-center space-x-2 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`
               }
@@ -42,7 +42,7 @@ const Navbar = () => {
             </NavLink>
             
             <NavLink 
-              to="/notifications" 
+              to="/notification" 
               className={({ isActive }) => 
                 `flex items-center space-x-2 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`
               }
