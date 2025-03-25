@@ -1,44 +1,53 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, Github } from "lucide-react";
+import { Mail, Lock} from "lucide-react";
 import Header from "../Header/Header";
-import Footer from "../Footer";
-
+import { getAuth } from "firebase/auth";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { app } from "../../firebase/firebase.config";
+import Swal from "sweetalert2";
+import useAuth from "../../Hooks/useAuth";
+const auth = getAuth(app);
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError(null);
-  };
-
-  const handleEmailLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    try {
-      if (form.email === "demo@example.com" && form.password === "password") {
-        localStorage.setItem("user", JSON.stringify({ email: form.email }));
-        navigate("/dashboard");
-      } else {
-        throw new Error("Invalid credentials");
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGithubLogin = () => {
-    setError("GitHub authentication is not available in demo mode");
+  const { signIn, setUser } = useAuth();
+  const location = useLocation();
+  const handleLogIn = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.email.value;
+    const password = form.password.value;
+    signIn(email, password)
+      .then((result) => {
+        console.log(result.user);
+        const currentUser = auth.currentUser;
+        if (currentUser.emailVerified) {
+          setUser(result.user);
+          setLoading(false);
+          navigate(location?.state ? location.state : "/dashboard", {
+            replace: true,
+          });
+        }
+        else{
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Verify your email to login",
+            showConfirmButton: false,
+            timer: 4500,
+          });
+        }
+      })
+      .catch(()=>{
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Wrong email / password",
+          showConfirmButton: false,
+          timer: 4500,
+        });
+      });
   };
 
   return (
@@ -59,9 +68,6 @@ const Login = () => {
                 create a new account
               </Link>
             </p>
-            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-              Demo credentials: demo@example.com / password
-            </p>
           </div>
 
           {error && (
@@ -70,7 +76,7 @@ const Login = () => {
             </div>
           )}
 
-          <form className="mt-8 space-y-6" onSubmit={handleEmailLogin}>
+          <form className="mt-8 space-y-6" onSubmit={handleLogIn}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
                 <label htmlFor="email" className="sr-only">
@@ -85,8 +91,6 @@ const Login = () => {
                     name="email"
                     type="email"
                     required
-                    value={form.email}
-                    onChange={handleChange}
                     className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                     placeholder="Email address"
                   />
@@ -105,8 +109,6 @@ const Login = () => {
                     name="password"
                     type="password"
                     required
-                    value={form.password}
-                    onChange={handleChange}
                     className="appearance-none relative block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm dark:bg-gray-700"
                     placeholder="Password"
                   />
@@ -130,21 +132,6 @@ const Login = () => {
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <button
-                onClick={handleGithubLogin}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <Github className="h-5 w-5" />
-                GitHub
-              </button>
             </div>
           </div>
         </div>
