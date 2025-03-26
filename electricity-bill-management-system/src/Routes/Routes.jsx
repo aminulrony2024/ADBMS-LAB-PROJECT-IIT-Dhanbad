@@ -13,6 +13,11 @@ import { LogIn } from "lucide-react";
 import Analytics from "../components/Analytics";
 import Feedback from "../components/Feedback";
 import Notification from "../components/Notification";
+import AdminDashboard from "../components/Admin/AdminDashboard";
+import Bills from "../components/Admin/Bills";
+import NewConnection from "../components/Admin/NewConnection";
+import Complaints from "../components/Admin/Complaints";
+import CustomerDetails from "../components/Admin/CustomerDetails";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -59,6 +64,26 @@ export const router = createBrowserRouter([
   {
     path:"feedback",
     element:<Feedback></Feedback>
+  },
+  {
+    path:"admin-dashboard",
+    element:<AdminDashboard></AdminDashboard>
+  },
+  {
+    path:"admin-bill",
+    element:<Bills></Bills>
+  },
+  {
+    path:"admin-complaints",
+    element:<Complaints></Complaints>
+  },
+  {
+    path:"customer-details",
+    element:<CustomerDetails></CustomerDetails>
+  },
+  {
+    path:"new-connection",
+    element:<NewConnection></NewConnection>
   }
   // {
   //   path: "home",

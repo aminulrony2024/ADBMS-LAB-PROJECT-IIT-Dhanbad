@@ -8,10 +8,8 @@ import { ThemeProvider } from "./components/context/ThemeContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-    <ThemeProvider>
-      <div>
+      <ThemeProvider>
         <RouterProvider router={router} />
-      </div>
       </ThemeProvider>
     </AuthProvider>
   </StrictMode>
