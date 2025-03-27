@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
         const userInfo = { email: currentUser.email };
       } else {
         // Remove token (if token stored in the client side from local storage if the user is logged out)
-        //   localStorage.removeItem('access-token');
+          localStorage.removeItem('access-token');
         setLoading(false);
       }
     });

@@ -63,13 +63,13 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
-            </button>
+          <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          aria-label="Toggle theme"
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </button>
 
             <button
               onClick={handleLogout}

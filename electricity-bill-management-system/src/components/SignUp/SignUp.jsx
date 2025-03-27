@@ -14,7 +14,6 @@ const SignUp = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const { newUser } = useAuth();
-  // const [loading, setLoading] = useState(false);
   const handleSignUp = (event) => {
     event.preventDefault();
     const form = event.target;

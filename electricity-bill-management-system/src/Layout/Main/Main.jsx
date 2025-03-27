@@ -4,7 +4,6 @@ import ThreeScene from '../../components/ThreeScene';
 
 const Main = () => {
   return (
-    
     <div className="min-h-screen">
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
