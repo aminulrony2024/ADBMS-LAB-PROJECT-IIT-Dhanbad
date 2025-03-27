@@ -10,7 +10,7 @@ import { createContext, useEffect, useState } from "react";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 const auth = getAuth(app);
 export const AuthContext = createContext(null);
-const AuthProvider = ({ children }) => {
+const AuthProviders = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
@@ -18,12 +18,21 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
+        // get token and store client
         const userInfo = { email: currentUser.email };
-      } else {
+        axiosPublic.post('/jwt', userInfo)
+            .then(res => {
+                if (res.data.token) {
+                    localStorage.setItem('access-token', res.data.token);
+                    setLoading(false);
+                }
+            })
+    }
+    else {
         // Remove token (if token stored in the client side from local storage if the user is logged out)
-          localStorage.removeItem('access-token');
+        localStorage.removeItem('access-token');
         setLoading(false);
-      }
+    }
     });
     return () => {
       return unsubscribe();
@@ -54,4 +63,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export default AuthProvider;
+export default AuthProviders;
