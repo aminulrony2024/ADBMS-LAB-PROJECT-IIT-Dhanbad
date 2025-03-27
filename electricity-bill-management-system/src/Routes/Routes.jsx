@@ -18,16 +18,22 @@ export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home></Home>,
+    children : [
+    ]
   },
   { path: "signup", element: <SignUp></SignUp> },
   { path: "login", element: <Login></Login> },
+  {
+    path: "notification",
+    element: <PrivateRoute><Notification></Notification></PrivateRoute>,
+  },
   {
     path: "dashboard",
     element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
   },
   {
-    path: "notification",
-    element: <PrivateRoute><Notification></Notification></PrivateRoute>,
+    path: "admin-dashboard",
+    element: <AdminRoute><AdminDashboard></AdminDashboard></AdminRoute>,
   },
   {
     path: "analytics",
@@ -36,10 +42,6 @@ export const router = createBrowserRouter([
   {
     path: "feedback",
     element: <PrivateRoute><Feedback></Feedback></PrivateRoute>,
-  },
-  {
-    path: "admin-dashboard",
-    element: <AdminRoute><AdminDashboard></AdminDashboard></AdminRoute>,
   },
   {
     path: "admin-bill",

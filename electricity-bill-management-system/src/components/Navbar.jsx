@@ -2,14 +2,17 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Sun, Moon, Home, BarChart2, Bell, MessageSquare, LogOut } from 'lucide-react';
 import { useTheme } from '../components/context/ThemeContext';
-
+import { useContext } from "react";
+import { AuthContext } from "../providers/AuthProviders";
 const Navbar = () => {
   const { isDarkMode, toggleTheme } = useTheme();
-  const navigate = useNavigate();
-
+  const { logOut, setLoading } = useContext(AuthContext);
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
+    logOut()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
