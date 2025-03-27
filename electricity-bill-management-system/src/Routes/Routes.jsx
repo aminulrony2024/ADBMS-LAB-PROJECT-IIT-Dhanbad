@@ -1,15 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Navigate } from "react-router-dom";
 import Login from "../components/Login/Login";
-import Signup from "../components/SignUp/SignUp";
-import Dashboard from "../components/Dashboard/Dashboard";
-import Main from "../Layout/Main/Main";
-import ResetPassword from "../components/ResetPassword/ResetPassword";
 import Home from "../Layout/Home/Home";
-import { H1Icon } from "@heroicons/react/24/outline";
 import SignUp from "../components/SignUp/SignUp";
-import { LogIn } from "lucide-react";
 import Analytics from "../components/Analytics";
 import Feedback from "../components/Feedback";
 import Notification from "../components/Notification";
@@ -18,61 +11,52 @@ import Bills from "../components/Admin/Bills";
 import NewConnection from "../components/Admin/NewConnection";
 import Complaints from "../components/Admin/Complaints";
 import CustomerDetails from "../components/Admin/CustomerDetails";
+import PrivateRoute from "./PrivateRoute";
+import AdminRoute from "./AdminRoute";
+import Dashboard from "../components/Dashboard/Dashboard"
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Home></Home>,
   },
-  {path:"signup",
-  element:<SignUp></SignUp>,},
-  {path:"login",
-  element:<Login></Login>,},
+  { path: "signup", element: <SignUp></SignUp> },
+  { path: "login", element: <Login></Login> },
   {
-    path:"dashboard",
-    element:<Dashboard></Dashboard>
+    path: "dashboard",
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
   },
   {
-    path:"notification",
-    element:<Notification></Notification>
+    path: "notification",
+    element: <PrivateRoute><Notification></Notification></PrivateRoute>,
   },
   {
-    path:"analytics",
-    element:<Analytics></Analytics>
+    path: "analytics",
+    element: <PrivateRoute><Analytics></Analytics></PrivateRoute>,
   },
   {
-    path:"feedback",
-    element:<Feedback></Feedback>
+    path: "feedback",
+    element: <PrivateRoute><Feedback></Feedback></PrivateRoute>,
   },
   {
-    path:"admin-dashboard",
-    element:<AdminDashboard></AdminDashboard>
+    path: "admin-dashboard",
+    element: <AdminRoute><AdminDashboard></AdminDashboard></AdminRoute>,
   },
   {
-    path:"admin-bill",
-    element:<Bills></Bills>
+    path: "admin-bill",
+    element: <AdminRoute><Bills></Bills></AdminRoute>,
   },
   {
-    path:"admin-complaints",
-    element:<Complaints></Complaints>
+    path: "admin-complaints",
+    element: <AdminRoute><Complaints></Complaints></AdminRoute>,
   },
   {
-    path:"customer-details",
-    element:<CustomerDetails></CustomerDetails>
+    path: "customer-details",
+    element: <AdminRoute><CustomerDetails></CustomerDetails></AdminRoute>,
   },
   {
-    path:"new-connection",
-    element:<NewConnection></NewConnection>
-  }
-  // {
-  //   path: "home",
-  //   element: <h1></h1>,
-  //   children: [
-  //     {
-  //       path: "dashboard",
-  //       element: <Dashboard></Dashboard>,
-  //     },
-  //   ],
-  // },
+    path: "new-connection",
+    element: <AdminRoute><NewConnection></NewConnection></AdminRoute>,
+  },
 ]);
 
 const Routes = () => {
